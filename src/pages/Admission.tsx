@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,6 +32,26 @@ const formSchema = z.object({
 const Admission = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [courses, setCourses] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('status', 'active')
+      .order('title');
+    
+    if (error) {
+      console.error('Error fetching courses:', error);
+      return;
+    }
+    
+    setCourses(data || []);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,29 +71,42 @@ const Admission = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    console.log("Form submitted:", values);
-    toast({
-      title: "Application Submitted!",
-      description: "We'll contact you soon with further details.",
-    });
-    
-    form.reset();
-    setIsSubmitting(false);
+
+    try {
+      const { error } = await supabase
+        .from('admissions')
+        .insert({
+          full_name: values.fullName,
+          father_name: values.fatherName,
+          course_name: values.course,
+          cnic: values.cnic || '',
+          email: values.email,
+          contact_number: values.contactNumber,
+          address: values.address,
+          gender: values.gender,
+          qualification: values.qualification,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Application Submitted!",
+        description: "We'll contact you soon with further details.",
+      });
+      
+      form.reset();
+    } catch (error: any) {
+      console.error('Error submitting application:', error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const courses = [
-    "CIT (Certificate in Information Technology)",
-    "IT (Information Technology)",
-    "Digital Marketing",
-    "Graphic Designing",
-    "Web Designing",
-    "Web Development - Frontend",
-    "Web Development - Backend",
-    "Web Development - Full Stack",
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -138,8 +172,8 @@ const Admission = () => {
                           </FormControl>
                           <SelectContent>
                             {courses.map((course) => (
-                              <SelectItem key={course} value={course}>
-                                {course}
+                              <SelectItem key={course.id} value={course.title}>
+                                {course.title}
                               </SelectItem>
                             ))}
                           </SelectContent>
