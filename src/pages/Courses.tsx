@@ -1,9 +1,47 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import CourseCard from "@/components/CourseCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Skeleton } from "@/components/ui/skeleton";
+
+interface Course {
+  id: string;
+  title: string;
+  category: string;
+  duration: string;
+  description: string | null;
+  topics: string[];
+  image_url: string | null;
+  status: string;
+}
 
 const Courses = () => {
-  const courses = [
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("courses")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setCourses(data || []);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fallbackCourses = [
     {
       title: "CIT (Certificate in Information Technology)",
       duration: "6 Months",
@@ -120,13 +158,41 @@ const Courses = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course, index) => (
-              <div key={index} style={{ animationDelay: `${index * 0.1}s` }}>
-                <CourseCard {...course} />
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="border rounded-lg p-6">
+                  <Skeleton className="h-48 w-full mb-4" />
+                  <Skeleton className="h-6 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-full mb-2" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              ))}
+            </div>
+          ) : courses.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground mb-8">Loading courses from database...</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {fallbackCourses.map((course, index) => (
+                  <div key={index} style={{ animationDelay: `${index * 0.1}s` }}>
+                    <CourseCard {...course} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {courses.map((course, index) => (
+                <div key={course.id} style={{ animationDelay: `${index * 0.1}s` }}>
+                  <CourseCard 
+                    title={course.title}
+                    duration={course.duration}
+                    topics={course.topics}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="mt-16 bg-primary/10 border-2 border-primary/20 rounded-lg p-8 text-center animate-fade-in">
             <h2 className="text-2xl font-bold mb-4">Supervised by Industry Professionals</h2>
