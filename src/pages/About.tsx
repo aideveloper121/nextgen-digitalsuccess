@@ -63,12 +63,10 @@ const About = () => {
                 <Users className="text-primary" size={32} />
                 <h2 className="text-2xl font-bold">Our Expert Team</h2>
               </div>
-            
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <h3 className="font-semibold text-lg mb-2">Ashir Ahmed</h3>
-                  <p className="text-sm text-primary font-medium">IT Engineer</p>
-                  <p className="text-xs text-muted-foreground mt-2">Lead Instructor</p>
-                </div>
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <h3 className="font-semibold text-lg mb-2">Ashir Ahmed</h3>
+                <p className="text-sm text-primary font-medium">IT Engineer</p>
+                <p className="text-xs text-muted-foreground mt-2">Lead Instructor</p>
               </div>
             </div>
 
