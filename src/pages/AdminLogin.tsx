@@ -13,37 +13,51 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSignup, setIsSignup] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      if (isSignup) {
+        // Sign up new user
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-      if (authError) throw authError;
+        if (authError) throw authError;
 
-      // Check if user is admin
-      const { data: roleData, error: roleError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', authData.user.id)
-        .eq('role', 'admin')
-        .single();
+        toast.success("Account created! Your User ID: " + authData.user?.id + " - Please contact system admin to grant admin access.");
+      } else {
+        // Sign in existing user
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (roleError || !roleData) {
-        await supabase.auth.signOut();
-        throw new Error('Unauthorized: Admin access only');
+        if (authError) throw authError;
+
+        // Check if user is admin
+        const { data: roleData, error: roleError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', authData.user.id)
+          .eq('role', 'admin')
+          .single();
+
+        if (roleError || !roleData) {
+          await supabase.auth.signOut();
+          throw new Error('Unauthorized: Admin access only');
+        }
+
+        toast.success("Login successful!");
+        navigate("/admin/dashboard");
       }
-
-      toast.success("Login successful!");
-      navigate("/admin/dashboard");
     } catch (error: any) {
-      console.error('Login error:', error);
-      toast.error(error.message || "Login failed. Please check your credentials.");
+      console.error('Auth error:', error);
+      toast.error(error.message || `${isSignup ? 'Signup' : 'Login'} failed. Please try again.`);
     } finally {
       setLoading(false);
     }
@@ -56,11 +70,13 @@ const AdminLogin = () => {
           <div className="flex justify-center mb-4">
             <img src={logo} alt="NextGen Computer Academy" className="h-20" />
           </div>
-          <CardTitle className="text-2xl">Admin Login</CardTitle>
-          <CardDescription>Enter your credentials to access the admin panel</CardDescription>
+          <CardTitle className="text-2xl">{isSignup ? "Create Admin Account" : "Admin Login"}</CardTitle>
+          <CardDescription>
+            {isSignup ? "Create your admin account" : "Enter your credentials to access the admin panel"}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -84,7 +100,15 @@ const AdminLogin = () => {
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
+              {loading ? (isSignup ? "Creating account..." : "Logging in...") : (isSignup ? "Sign Up" : "Login")}
+            </Button>
+            <Button 
+              type="button" 
+              variant="ghost" 
+              className="w-full" 
+              onClick={() => setIsSignup(!isSignup)}
+            >
+              {isSignup ? "Already have an account? Login" : "First time? Create account"}
             </Button>
           </form>
         </CardContent>
