@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react"; 
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
 import Admission from "./pages/Admission";
@@ -41,10 +42,11 @@ const App = () => (
           <Route path="/admin/admissions" element={<Admissions />} />
           <Route path="/admin/gallery" element={<AdminGallery />} />
           <Route path="/admin/faqs" element={<FAQs />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        
           <Route path="*" element={<NotFound />} />
         </Routes>
         <WhatsAppButton />
+        <SpeedInsights /> 
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
