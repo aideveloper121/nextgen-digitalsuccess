@@ -59,7 +59,7 @@ const Footer = () => {
             © 2025 NextGen Computer Academy. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground mt-2">
-            Made with ❤️ by <span className="text-primary font-semibold">Tez Solutions</span>
+            Made with ❤️ by <span className="text-primary font-semibold"><a href="https://tezsolutions.vercel.app/">Tez Solutions</a></span>
           </p>
         </div>
       </div>
