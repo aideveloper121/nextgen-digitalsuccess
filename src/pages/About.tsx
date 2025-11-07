@@ -63,17 +63,7 @@ const About = () => {
                 <Users className="text-primary" size={32} />
                 <h2 className="text-2xl font-bold">Our Expert Team</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <h3 className="font-semibold text-lg mb-2">M. Mubashir Khan</h3>
-                  <p className="text-sm text-primary font-medium">CTD Department</p>
-                  <p className="text-xs text-muted-foreground mt-2">Technical Supervisor</p>
-                </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <h3 className="font-semibold text-lg mb-2">Nadeem Ahmed</h3>
-                  <p className="text-sm text-primary font-medium">Income Tax Consultant</p>
-                  <p className="text-xs text-muted-foreground mt-2">Financial Advisor</p>
-                </div>
+            
                 <div className="text-center p-4 bg-muted rounded-lg">
                   <h3 className="font-semibold text-lg mb-2">Ashir Ahmed</h3>
                   <p className="text-sm text-primary font-medium">IT Engineer</p>
