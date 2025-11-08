@@ -19,7 +19,6 @@ const Contact = () => {
 
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              
               {/* Contact Information */}
               <div className="space-y-6 animate-fade-in">
                 {/* Phone */}
@@ -88,7 +87,8 @@ const Contact = () => {
                 <div className="bg-gradient-to-br from-primary/10 to-background border-2 border-primary/20 rounded-lg p-8">
                   <h2 className="text-2xl font-bold mb-4">Ready to Start?</h2>
                   <p className="text-muted-foreground mb-6">
-                    Take the first step towards your digital success. Enroll in our courses today and unlock your potential!
+                    Take the first step towards your digital success. Enroll in
+                    our courses today and unlock your potential!
                   </p>
                   <Button asChild size="lg" className="w-full">
                     <a href="/admission">Apply for Admission</a>
@@ -125,7 +125,6 @@ const Contact = () => {
                   </p>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
