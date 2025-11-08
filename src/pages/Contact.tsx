@@ -130,7 +130,7 @@ const Contact = () => {
         </div>
       </section>
 
-    </Footer >
+      <Footer />
     </div>
   );
 };
