@@ -197,15 +197,7 @@ const Courses = () => {
           <div className="mt-16 bg-primary/10 border-2 border-primary/20 rounded-lg p-8 text-center animate-fade-in">
             <h2 className="text-2xl font-bold mb-4">Supervised by Industry Professionals</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <div>
-                <p className="font-semibold text-primary">M. Mubashir Khan</p>
-                <p className="text-sm text-muted-foreground">CTD Department</p>
-              </div>
-              <div>
-                <p className="font-semibold text-primary">Nadeem Ahmed</p>
-                <p className="text-sm text-muted-foreground">Income Tax Consultant</p>
-              </div>
-              <div>
+              
                 <p className="font-semibold text-primary">Ashir Ahmed</p>
                 <p className="text-sm text-muted-foreground">IT Engineer</p>
               </div>
