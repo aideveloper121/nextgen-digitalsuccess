@@ -96,12 +96,12 @@ const Contact = () => {
                   <h3 className="text-xl font-bold mb-4">Office Hours</h3>
                   <div className="space-y-2 text-muted-foreground">
                     <p className="flex justify-between">
-                      <span>Monday - Friday:</span>
-                      <span className="font-medium">9:00 AM - 7:00 PM</span>
+                      <span>Monday -Saturday :</span>
+                      <span className="font-medium">3:00 PM - 11:00 PM</span>
                     </p>
                     <p className="flex justify-between">
-                      <span>Saturday:</span>
-                      <span className="font-medium">10:00 AM - 5:00 PM</span>
+                      <span>Only Friday:</span>
+                      <span className="font-medium">3:30 AM - 11:00 PM</span>
                     </p>
                     <p className="flex justify-between">
                       <span>Sunday:</span>
