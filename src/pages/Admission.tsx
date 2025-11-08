@@ -121,7 +121,7 @@ const Admission = () => {
             </p>
             <div className="mt-6 inline-block bg-primary/10 border-2 border-primary/30 rounded-lg px-6 py-3">
               <p className="text-lg font-semibold text-primary">
-                🎉 Special Offer: Up to 60% Discount Available!
+                🎉 Special Offer: Up to 20% Discount Available!
               </p>
             </div>
           </div>
