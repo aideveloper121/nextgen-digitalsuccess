@@ -120,7 +120,7 @@ const Home = () => {
             Special Discount Offer!
           </h2>
           <p className="text-xl mb-8 animate-fade-in opacity-90">
-            Get up to 60% discount on course fees - Limited Time Offer
+            Get up to 30% discount on course fees - Limited Time Offer
           </p>
           <Button asChild size="lg" variant="secondary" className="animate-scale-in">
             <Link to="/admission">Enroll Now & Save</Link>
