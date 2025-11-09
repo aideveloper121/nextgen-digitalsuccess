@@ -20,6 +20,9 @@ import AdminGallery from "./pages/admin/Gallery";
 import FAQs from "./pages/admin/FAQs";
 import WhatsAppButton from "./components/WhatsAppButton";
 
+// ✅ Import the Protected Route wrapper
+import ProtectedAdminRoute from "@/components/ProtectedAdminRoute";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -29,6 +32,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/admission" element={<Admission />} />
@@ -37,16 +41,54 @@ const App = () => (
           <Route path="/gallery" element={<PublicGallery />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/courses" element={<AdminCourses />} />
-          <Route path="/admin/admissions" element={<Admissions />} />
-          <Route path="/admin/gallery" element={<AdminGallery />} />
-          <Route path="/admin/faqs" element={<FAQs />} />
-        
+
+          {/* ✅ Protected Admin Routes */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedAdminRoute>
+                <Dashboard />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/courses"
+            element={
+              <ProtectedAdminRoute>
+                <AdminCourses />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/admissions"
+            element={
+              <ProtectedAdminRoute>
+                <Admissions />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/gallery"
+            element={
+              <ProtectedAdminRoute>
+                <AdminGallery />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin/faqs"
+            element={
+              <ProtectedAdminRoute>
+                <FAQs />
+              </ProtectedAdminRoute>
+            }
+          />
+
+          {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+
         <WhatsAppButton />
-      
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
