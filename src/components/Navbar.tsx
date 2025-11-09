@@ -25,9 +25,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-3">
+            {/* ✅ Logo bara aur responsive */}
             {/* <img src={logo} alt="NextGen Computer Academy" className="h-12 w-auto" />*/}
-            <img src={logo} alt="NextGen Computer Academy" className="h-10 md:h-12 w-auto" />
-
+            <img src={logo} alt="NextGen Computer Academy" className="h-16 md:h-20 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -37,9 +37,7 @@ const Navbar = () => {
                 key={link.path}
                 to={link.path}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(link.path)
-                    ? "text-primary"
-                    : "text-foreground/80"
+                  isActive(link.path) ? "text-primary" : "text-foreground/80"
                 }`}
               >
                 {link.name}
@@ -69,9 +67,7 @@ const Navbar = () => {
                   to={link.path}
                   onClick={() => setIsOpen(false)}
                   className={`text-sm font-medium transition-colors hover:text-primary ${
-                    isActive(link.path)
-                      ? "text-primary"
-                      : "text-foreground/80"
+                    isActive(link.path) ? "text-primary" : "text-foreground/80"
                   }`}
                 >
                   {link.name}
