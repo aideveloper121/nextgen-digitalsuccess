@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
@@ -7,7 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { BookOpen, Users, Image, HelpCircle, LogOut } from "lucide-react";
 
 const Dashboard = () => {
-  const { loading, logout } = useAdminAuth();
+  const { user, loading, logout } = useAdminAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     courses: 0,
     admissions: 0,
@@ -16,23 +17,37 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    if (!loading && !user) {
+      // ✅ Redirect if not admin
+      navigate("/admin-login");
+    }
+  }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (!loading && user) {
+      fetchStats();
+    }
+  }, [loading, user]);
 
   const fetchStats = async () => {
-    const [coursesResult, admissionsResult, galleryResult, faqsResult] = await Promise.all([
-      supabase.from('courses').select('id', { count: 'exact', head: true }),
-      supabase.from('admissions').select('id', { count: 'exact', head: true }),
-      supabase.from('gallery').select('id', { count: 'exact', head: true }),
-      supabase.from('faqs').select('id', { count: 'exact', head: true }),
-    ]);
+    try {
+      const [coursesResult, admissionsResult, galleryResult, faqsResult] =
+        await Promise.all([
+          supabase.from("courses").select("id", { count: "exact", head: true }),
+          supabase.from("admissions").select("id", { count: "exact", head: true }),
+          supabase.from("gallery").select("id", { count: "exact", head: true }),
+          supabase.from("faqs").select("id", { count: "exact", head: true }),
+        ]);
 
-    setStats({
-      courses: coursesResult.count || 0,
-      admissions: admissionsResult.count || 0,
-      gallery: galleryResult.count || 0,
-      faqs: faqsResult.count || 0,
-    });
+      setStats({
+        courses: coursesResult.count || 0,
+        admissions: admissionsResult.count || 0,
+        gallery: galleryResult.count || 0,
+        faqs: faqsResult.count || 0,
+      });
+    } catch (err) {
+      console.error("Error fetching stats:", err);
+    }
   };
 
   if (loading) {
@@ -41,6 +56,10 @@ const Dashboard = () => {
         <p>Loading...</p>
       </div>
     );
+  }
+
+  if (!user) {
+    return null; // Redirecting, no need to render dashboard
   }
 
   return (
@@ -56,6 +75,7 @@ const Dashboard = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
+        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -98,6 +118,7 @@ const Dashboard = () => {
           </Card>
         </div>
 
+        {/* Manage Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Link to="/admin/courses">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
