@@ -9,60 +9,71 @@ export const useAdminAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkUser();
+    // ✅ Check session on app load
+    const init = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+        if (session?.user) {
+          // ✅ If session exists, verify admin role
+          await checkAdminRole(session.user.id);
+        } else {
+          // ✅ No session => user not logged in
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error restoring session:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
+
+    // ✅ Listen for login/logout changes
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
         if (session?.user) {
           await checkAdminRole(session.user.id);
         } else {
           setUser(null);
-          navigate("/admin-login");
         }
       }
     );
 
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    return () => {
+      subscription?.subscription?.unsubscribe?.();
+    };
+  }, []);
 
-  const checkUser = async () => {
+  const checkAdminRole = async (userId: string) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        navigate("/admin-login");
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .eq("role", "admin")
+        .single();
+
+      if (error || !data) {
+        console.warn("Not admin or role check failed");
+        await supabase.auth.signOut();
+        setUser(null);
         return;
       }
 
-      await checkAdminRole(session.user.id);
-    } catch (error) {
-      console.error('Error checking user:', error);
-      navigate("/admin-login");
-    } finally {
-      setLoading(false);
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      setUser(currentUser);
+    } catch (err) {
+      console.error("Error checking admin role:", err);
+      setUser(null);
     }
-  };
-
-  const checkAdminRole = async (userId: string) => {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .eq('role', 'admin')
-      .single();
-
-    if (error || !data) {
-      await supabase.auth.signOut();
-      navigate("/admin-login");
-      return;
-    }
-
-    const { data: { user: currentUser } } = await supabase.auth.getUser();
-    setUser(currentUser);
   };
 
   const logout = async () => {
     await supabase.auth.signOut();
+    setUser(null);
     navigate("/admin-login");
   };
 
