@@ -8,6 +8,7 @@ const Contact = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
+      {/* Contact Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
@@ -136,7 +137,7 @@ const Contact = () => {
           <h2 className="text-2xl font-bold text-center mb-6">Find Us on Map</h2>
           <div className="rounded-xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3617.4467085611504!2d66.97830707393848!3d24.950911941634935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb36bd5a92e3ca5%3A0xe7d0799230fa3bcb!2sNEXTGEN%20COMPUTER%20ACADEMY!5e0!3m2!1sen!2s!4v1763017118249!5m2!1sen!2s"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2755.4769850368143!2d66.97830707393848!3d24.950911941634935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb36bd5a92e3ca5%3A0xe7d0799230fa3bcb!2sNEXTGEN%20COMPUTER%20ACADEMY!5e1!3m2!1sen!2s!4v1763017377173!5m2!1sen!2s"
               width="100%"
               height="450"
               style={{ border: 0 }}
